@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import "./style/App.style.css";
+import { useEffect, useState } from "react";
+import * as S from "./style/App.style";
 
-function App() {
+export default function App() {
+  const [a, b] = useState(0);
+  function onScroll() {
+    b(window.scrollY);
+    console.log(a);
+  }
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [a]);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <S.Main>
+        <S.StickyContainer>
+          <S.Sticky>
+            <p className="title">안녕하세요.</p>
+          </S.Sticky>
+        </S.StickyContainer>
+        <S.StickyContainer>
+          <S.Sticky>
+            <p className="context">처음 뵙겠습니다.</p>
+          </S.Sticky>
+        </S.StickyContainer>
+      </S.Main>
     </div>
   );
 }
-
-export default App;
