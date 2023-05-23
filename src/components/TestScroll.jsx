@@ -11,7 +11,10 @@ function Test(props) {
     if (!ComponentElement) return;
 
     const componentRect = ComponentElement.getBoundingClientRect();
-    console.log("컴포넌트의 현재 위치 (높이):", componentRect.top);
+    console.log(
+      props.title + "컴포넌트의 현재 위치 (높이):",
+      componentRect.top
+    );
     console.log("컴포넌트의 전체 높이 :", componentRect.height);
     const handleScroll = () => {
       const scrollTop =
@@ -25,46 +28,30 @@ function Test(props) {
       const parentHeight = parentRect.height;
       const childRect = childElement.getBoundingClientRect();
       const childHeight = childRect.height;
-      const MaxHeight = componentRect.top + (parentHeight - childHeight); //현재 높이 + 자신의 높이
-      const MinHeight = componentRect.top + childHeight; //현재높이
+      const MaxHeight = parentHeight - childHeight; //현재 높이 + 자신의 높이
+      const MinHeight = componentRect.top; //현재높이
 
-      console.log(
-        "현재 높이 : ",
-        scrollTop,
-        ", MaxHeight : ",
-        MaxHeight,
-        ", MinHeight : ",
-        MinHeight,
-        ", (parentHeight - childHeight) : ",
-        parentHeight,
-        childHeight
-      );
-
-      if (scrollTop <= MinHeight || scrollTop >= MaxHeight) {
-        setOpacity(0);
+      const scrollPercent = scrollTop - MinHeight;
+      console.log(scrollPercent / MaxHeight);
+      if (scrollPercent / MaxHeight < 1 && scrollPercent / MaxHeight > 0) {
+        let HeightPercent = (scrollPercent / MaxHeight).toFixed(2) * 2;
+        if (HeightPercent > 1) {
+          setOpacity(1 - (HeightPercent % 1));
+        } else {
+          setOpacity(HeightPercent);
+        }
       } else {
-        const scrollPercent = scrollTop - MinHeight;
-        let opacity = 1 - scrollPercent / MaxHeight;
-        setOpacity(1);
+        setOpacity(0);
       }
-      //   parentHeight -= childHeight;
-
-      //   console.log(childRect);
-      //   const scrollTop =
-      //     window.pageYOffset || document.documentElement.scrollTop;
-      //   console.log(props.title, parentRect);
-
-      //   let newOpacity;
-      //   if (scrollTop <= parentRect.top) {
-      //     newOpacity = 1;
-      //   } else if (scrollTop >= parentRect.top + parentHeight) {
-      //     newOpacity = 0;
-      //   } else {
-      //     const scrollOffset = scrollTop - parentRect.top;
-      //     newOpacity = 1 - scrollOffset / parentHeight;
-      //   }
-
-      //   setOpacity(newOpacity);
+      // if (scrollTop <= MinHeight || scrollTop >= MaxHeight) {
+      //   setOpacity(0);
+      // } else {
+      // const scrollPercent = scrollTop - MinHeight;
+      // let opacity = scrollPercent / MaxHeight;
+      // console.log(props.title, opacity.toFixed(2));
+      // let fixOpacity = opacity.toFixed(2);
+      // setOpacity(fixOpacity);
+      // }
     };
 
     window.addEventListener("scroll", handleScroll);
